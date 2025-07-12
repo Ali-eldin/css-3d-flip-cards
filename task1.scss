@@ -1,0 +1,351 @@
+
+$accent-color: #8b5a3c;
+$gold-color: #d4af37;
+$text-dark: #2c1810;
+$border-radius: 15px;
+$transition-time: 0.8s;
+
+$font-stack: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin gradient-background($color1, $color2, $direction: 135deg) {
+    background: linear-gradient($direction, $color1, $color2);
+}
+
+@mixin card-shadow($opacity: 0.15) {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, $opacity);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    @include flex-center;
+    flex-direction: column;
+    min-height: 100vh;
+    font-family: $font-stack;
+    @include gradient-background(#f5f1eb, #e8dcc0);
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2em;
+    color: $accent-color;
+
+    h1 {
+        font-size: 2.5em;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    p {
+        font-size: 1.1em;
+        margin: 0.5em 0 0 0;
+        opacity: 0.8;
+    }
+}
+
+.book-icon {
+    font-size: 1.2em;
+    margin-right: 0.3em;
+}
+
+.info-icon {
+    font-size: 1em;
+    margin-right: 0.3em;
+}
+
+.arrow-icon {
+    font-size: 1.2em;
+    margin-right: 0.3em;
+}
+
+.star {
+    color: $gold-color;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
+    
+    &.empty {
+        color: rgba($gold-color, 0.3);
+    }
+    
+    &.half {
+        color: $gold-color;
+    }
+}
+
+.wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    width: 380px;
+    height: 520px;
+    perspective: 1500px;
+
+    .content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform $transition-time cubic-bezier(0.75, 0, 0.85, 1);
+    }
+}
+
+.more {
+    display: none;
+
+    &:checked ~ .content {
+        transform: rotateY(180deg);
+    }
+}
+
+.front,
+.back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    border-radius: $border-radius;
+    @include card-shadow();
+
+    .inner {
+        height: 100%;
+        display: grid;
+        padding: 2em;
+        transform: translateZ(40px) scale(0.96);
+    }
+}
+
+.front {
+    @include gradient-background(#ffffff, #f8f5f0, 145deg);
+    border: 3px solid $gold-color;
+
+    .inner {
+        grid-template-rows: 1fr auto auto auto auto 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    .book-cover {
+        grid-row: 1;
+        width: 200px;
+        height: 280px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        align-self: center;
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            @include gradient-background(rgba($gold-color, 0.1), rgba($accent-color, 0.1), 45deg);
+            border-radius: 8px;
+        }
+    }
+
+    h2 {
+        grid-row: 2;
+        margin: 0.8em 0 0.3em 0;
+        color: $text-dark;
+        font-weight: 600;
+        font-size: 1.4em;
+        line-height: 1.2;
+    }
+
+    .author {
+        grid-row: 3;
+        color: $accent-color;
+        font-size: 1em;
+        font-weight: 500;
+        margin: 0;
+        font-style: italic;
+    }
+
+    .genre {
+        grid-row: 4;
+        @include gradient-background($gold-color, darken($gold-color, 10%));
+        color: white;
+        padding: 0.3em 1em;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: 500;
+        margin: 0.8em 0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .rating {
+        grid-row: 5;
+        font-size: 1.2em;
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 2px;
+        margin: 0.5em 0;
+    }
+}
+
+.back {
+    transform: rotateY(180deg);
+    @include gradient-background(#ffffff, #f8f5f0, 145deg);
+    border: 3px solid $accent-color;
+
+    .inner {
+        grid-template-rows: auto auto 1fr auto auto auto;
+        grid-gap: 1em;
+    }
+
+    .book-info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1em;
+        text-align: center;
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: $accent-color;
+
+            .info-number {
+                font-size: 1.8em;
+                font-weight: 700;
+                color: $gold-color;
+            }
+
+            .info-label {
+                font-size: 0.8em;
+                font-weight: 500;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                margin-top: 0.2em;
+            }
+        }
+    }
+
+    .description {
+        font-size: 0.9em;
+        line-height: 1.6;
+        color: $text-dark;
+        text-align: justify;
+        overflow: auto;
+        padding-right: 5px;
+    }
+
+    .book-details {
+        @include flex-center;
+        justify-content: space-between;
+        padding: 1em 0;
+        border-top: 2px solid lighten($accent-color, 40%);
+        border-bottom: 2px solid lighten($accent-color, 40%);
+
+        .publisher,
+        .year {
+            font-size: 0.9em;
+            color: $accent-color;
+            font-weight: 500;
+        }
+    }
+
+    .price {
+        text-align: center;
+        font-size: 1.8em;
+        font-weight: 700;
+        color: $gold-color;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .button {
+        justify-self: center;
+        margin-top: 1em;
+    }
+}
+
+.button {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.8em 2em;
+    @include gradient-background($gold-color, darken($gold-color, 10%));
+    color: white;
+    border: none;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba($gold-color, 0.3);
+    transform: translateZ(20px);
+    font-family: $font-stack;
+
+    &:hover {
+        @include gradient-background(darken($gold-color, 10%), $gold-color);
+        transform: translateZ(20px) translateY(-2px);
+        box-shadow: 0 8px 25px rgba($gold-color, 0.4);
+    }
+
+    &.return {
+        @include gradient-background($accent-color, darken($accent-color, 10%));
+        color: white;
+
+        &:hover {
+            @include gradient-background(darken($accent-color, 10%), $accent-color);
+        }
+    }
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+
+    &-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    &-thumb {
+        background: $gold-color;
+        border-radius: 10px;
+
+        &:hover {
+            background: darken($gold-color, 10%);
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .card {
+        width: 320px;
+        height: 480px;
+    }
+    
+    .header h1 {
+        font-size: 2em;
+    }
+}
